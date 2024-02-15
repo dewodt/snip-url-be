@@ -2,15 +2,30 @@ package main
 
 import (
 	"fmt"
+	"snip-url-be/internal/auth"
+	"snip-url-be/internal/db"
 	"snip-url-be/internal/server"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Initialize Env
+	errEnv := godotenv.Load()
+	if errEnv != nil {
+		panic("Error loading .env file")
+	}
 
+	// Initialize Auth
+	auth.NewAuth()
+
+	// Initialize Database
+	db.NewDB()
+
+	// Initialize Server
 	server := server.NewServer()
-
-	err := server.ListenAndServe()
-	if err != nil {
-		panic(fmt.Sprintf("cannot start server: %s", err))
+	errServer := server.ListenAndServe()
+	if errServer != nil {
+		panic(fmt.Sprintf("cannot start server: %s", errServer))
 	}
 }
