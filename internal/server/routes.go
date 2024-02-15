@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"snip-url-be/internal/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,14 +10,28 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
 
-	r.GET("/", s.HelloWorldHandler)
+	// API routes
+	api := r.Group("/api")
+	{
+		// Auth routes
+		auth := api.Group("/auth")
+		{
+			// Email provider
+			auth.POST("/email/sign-in", controllers.EmailSignInProviderHandler)
+			auth.POST("/email/sign-up", controllers.EmailSignUpProviderHandler)
+			auth.GET("/email/callback/:token", controllers.EmailCallbackHandler)
+
+			// OAuth provider
+			auth.GET("/:provider", controllers.OAuthProviderHandler)
+			auth.GET("/:provider/callback", controllers.OAuthCallbackHandler)
+
+			// Check session
+			// auth.GET("/session", controllers.SessionHandler)
+
+			// Sign out
+			auth.GET("/sign-out", controllers.SignOutHandler)
+		}
+	}
 
 	return r
-}
-
-func (s *Server) HelloWorldHandler(c *gin.Context) {
-	resp := make(map[string]string)
-	resp["message"] = "Hello World"
-
-	c.JSON(http.StatusOK, resp)
 }
