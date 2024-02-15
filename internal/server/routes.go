@@ -26,7 +26,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 			auth.GET("/:provider/callback", controllers.OAuthCallbackHandler)
 
 			// Check session
-			// auth.GET("/session", controllers.SessionHandler)
+			auth.GET("/session", controllers.SessionHandler)
 
 			// Sign out
 			auth.GET("/sign-out", controllers.SignOutHandler)

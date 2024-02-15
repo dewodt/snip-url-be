@@ -55,6 +55,7 @@ func EmailCallbackHandler(c *gin.Context) {
 	// Create jwt
 	JWT_SECRET := os.Getenv("JWT_SECRET")
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":    user.ID,
 		"email": user.Email,
 		"name":  user.Name,
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
@@ -69,5 +70,5 @@ func EmailCallbackHandler(c *gin.Context) {
 	c.SetCookie("auth", jwtSigned, int(time.Hour*24), "/", os.Getenv("FE_URL"), false, true)
 
 	// Return success
-	c.JSON(http.StatusOK, gin.H{"message": "User signed in"})
+	c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL"))
 }
