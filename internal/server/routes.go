@@ -31,6 +31,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 			// Sign out
 			auth.GET("/sign-out", controllers.SignOutHandler)
 		}
+
+		// Upload file
+		api.POST("/upload-avatar", controllers.UploadAvatarHandler)
+
+		// Snip
 	}
 
 	return r
