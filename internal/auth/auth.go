@@ -23,12 +23,12 @@ func NewAuth() {
 	// Google
 	googleOAuthClientID := os.Getenv("GOOGLE_OAUTH_CLIENT_ID")
 	googleOAuthClientSecret := os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET")
-	googleOAuthCallbackURL := os.Getenv("BE_URL") + "/auth/google/callback"
+	googleOAuthCallbackURL := os.Getenv("BE_URL") + "/api/auth/google/callback"
 
 	// Discord
 	discordOAuthClientID := os.Getenv("DISCORD_OAUTH_CLIENT_ID")
 	discordOAuthClientSecret := os.Getenv("DISCORD_OAUTH_CLIENT_SECRET")
-	discordOAuthCallbackURL := os.Getenv("BE_URL") + "/auth/discord/callback"
+	discordOAuthCallbackURL := os.Getenv("BE_URL") + "/api/auth/discord/callback"
 
 	// Configure cookie
 	store := sessions.NewCookieStore([]byte(SESSION_SECRET))
