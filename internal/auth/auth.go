@@ -7,6 +7,7 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/discord"
+	"github.com/markbates/goth/providers/github"
 	"github.com/markbates/goth/providers/google"
 )
 
@@ -30,6 +31,11 @@ func NewAuth() {
 	discordOAuthClientSecret := os.Getenv("DISCORD_OAUTH_CLIENT_SECRET")
 	discordOAuthCallbackURL := os.Getenv("BE_URL") + "/api/auth/discord/callback"
 
+	// Github
+	githubOAuthClientID := os.Getenv("GITHUB_OAUTH_CLIENT_ID")
+	githubOAuthClientSecret := os.Getenv("GITHUB_OAUTH_CLIENT_SECRET")
+	githubOAuthCallbackURL := os.Getenv("BE_URL") + "/api/auth/github/callback"
+
 	// Configure cookie
 	store := sessions.NewCookieStore([]byte(SESSION_SECRET))
 	store.MaxAge(maxAge)
@@ -42,5 +48,6 @@ func NewAuth() {
 	goth.UseProviders(
 		google.New(googleOAuthClientID, googleOAuthClientSecret, googleOAuthCallbackURL),
 		discord.New(discordOAuthClientID, discordOAuthClientSecret, discordOAuthCallbackURL),
+		github.New(githubOAuthClientID, githubOAuthClientSecret, githubOAuthCallbackURL),
 	)
 }
