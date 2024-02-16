@@ -36,8 +36,13 @@ func EmailCallbackHandler(c *gin.Context) {
 	// Check if user is already registered
 	var user models.User
 	dbRes = db.DB.Where("email = ?", verification.Email).First(&user)
-	// User is not registered
-	if errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+	// Check query errors
+	if dbRes.Error != nil && !errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to find user"})
+		return
+	}
+	// Check if user is not found
+	if dbRes.Error != nil && errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
 		// Create user
 		user = models.User{
 			Email: verification.Email,
