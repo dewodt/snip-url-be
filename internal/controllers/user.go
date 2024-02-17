@@ -13,8 +13,8 @@ import (
 )
 
 type UserSettingsSchema struct {
-	Name   string `form:"name" binding:"required"`
-	Avatar string `form:"avatar"`
+	Name   string  `form:"name" binding:"required"`
+	Avatar *string `form:"avatar"`
 }
 
 func UpdateUserHandler(c *gin.Context) {
@@ -30,7 +30,7 @@ func UpdateUserHandler(c *gin.Context) {
 	session := utils.GetSessionFromContext(c)
 
 	// Update user settings
-	dbRes := db.DB.Model(&models.User{}).Where("id = ?", session.ID).Updates(models.User{
+	dbRes := db.DB.Model(&models.User{}).Select("name", "avatar").Where("id = ?", session.ID).Updates(models.User{
 		Name:   formData.Name,
 		Avatar: formData.Avatar,
 	})
