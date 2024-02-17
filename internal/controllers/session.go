@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// Route: /api/auth/session (check if user is authenticated)
+// Route: GET /api/auth/session (check if user is authenticated)
 func SessionHandler(c *gin.Context) {
 	// Check if user is authenticated from JWT
 	jwtSigned, err := c.Cookie("auth")

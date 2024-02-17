@@ -14,7 +14,7 @@ import (
 )
 
 type UploadImageSchema struct {
-	Image *multipart.FileHeader `form:"image" binding:"required"`
+	Image *multipart.FileHeader `form:"file" binding:"required"`
 }
 
 func UploadAvatarHandler(c *gin.Context) {

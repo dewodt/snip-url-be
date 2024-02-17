@@ -63,6 +63,7 @@ func EmailCallbackHandler(c *gin.Context) {
 		"id":         user.ID,
 		"email":      user.Email,
 		"name":       user.Name,
+		"avatar":     user.Avatar,
 		"expires_at": time.Now().Add(time.Hour * 24).Unix(),
 	})
 	jwtSigned, err := jwtToken.SignedString([]byte(JWT_SECRET))
@@ -72,7 +73,7 @@ func EmailCallbackHandler(c *gin.Context) {
 	}
 
 	// Save to cookie
-	c.SetCookie("auth", jwtSigned, int(time.Hour*24), "/", os.Getenv("FE_URL"), false, true)
+	c.SetCookie("auth", jwtSigned, 24*3600, "/", os.Getenv("FE_URL"), false, true)
 
 	// Return success
 	c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL"))

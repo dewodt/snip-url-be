@@ -59,6 +59,7 @@ func OAuthCallbackHandler(c *gin.Context) {
 		"id":         userDB.ID,
 		"email":      userDB.Email,
 		"name":       userDB.Name,
+		"avatar":     userDB.Avatar,
 		"expires_at": time.Now().Add(time.Hour * 24).Unix(),
 	})
 	jwtSigned, err := jwtToken.SignedString([]byte(JWT_SECRET))
@@ -68,7 +69,7 @@ func OAuthCallbackHandler(c *gin.Context) {
 	}
 
 	// Save to cookie
-	c.SetCookie("auth", jwtSigned, int(time.Hour*24), "/", os.Getenv("FE_URL"), false, true)
+	c.SetCookie("auth", jwtSigned, 24*3600, "/", os.Getenv("FE_URL"), false, true)
 
 	// Redirect to frontend
 	c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL"))

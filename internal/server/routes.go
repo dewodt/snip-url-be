@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"snip-url-be/internal/controllers"
+	"snip-url-be/internal/middlewares"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -44,8 +45,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 			auth.GET("/sign-out", controllers.SignOutHandler)
 		}
 
+		// Settings
+		api.PUT("/user", middlewares.RequireAuthMiddleware(), controllers.UpdateUserHandler)
+
 		// Upload file
-		api.POST("/upload-avatar", controllers.UploadAvatarHandler)
+		api.POST("/upload-avatar", middlewares.RequireAuthMiddleware(), controllers.UploadAvatarHandler)
 
 		// Snip
 	}
