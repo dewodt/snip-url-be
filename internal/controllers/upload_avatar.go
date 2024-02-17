@@ -69,15 +69,15 @@ func UploadAvatarHandler(c *gin.Context) {
 	b64Formatted := fmt.Sprintf("data:%s;base64,%s", fileType, b64)
 
 	// Get user id
-	claims := utils.GetClaimsFromContext(c)
-	if claims == nil {
+	session := utils.GetSessionFromContext(c)
+	if session == nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
 
 	// Upload to cloudinary
 	folderName := "snip-url/user/"
-	publicId := claims["id"].(string) // Public id = user id
+	publicId := session.ID
 	overwrite := true
 	res, err := cld.Upload.Upload(c, b64Formatted, uploader.UploadParams{
 		Folder:    folderName,

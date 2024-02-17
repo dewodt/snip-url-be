@@ -60,10 +60,10 @@ func EmailCallbackHandler(c *gin.Context) {
 	// Create jwt
 	JWT_SECRET := os.Getenv("JWT_SECRET")
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":    user.ID,
-		"email": user.Email,
-		"name":  user.Name,
-		"exp":   time.Now().Add(time.Hour * 24).Unix(),
+		"id":         user.ID,
+		"email":      user.Email,
+		"name":       user.Name,
+		"expires_at": time.Now().Add(time.Hour * 24).Unix(),
 	})
 	jwtSigned, err := jwtToken.SignedString([]byte(JWT_SECRET))
 	if err != nil {

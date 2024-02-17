@@ -3,11 +3,20 @@ package utils
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
+
+type Session struct {
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Avatar    string `json:"avatar"`
+	Email     string `json:"email"`
+	ExpiresAt int64  `json:"expires_at"`
+}
 
 // Generate a secure token (for email)
 func GenerateSecureToken(length int) (string, error) {
@@ -23,7 +32,7 @@ func GenerateSecureToken(length int) (string, error) {
 }
 
 // Get claims from context
-func GetClaimsFromContext(c *gin.Context) map[string]interface{} {
+func GetSessionFromContext(c *gin.Context) *Session {
 	// Check if user is authenticated from JWT
 	jwtSigned, err := c.Cookie("auth")
 	if err != nil {
@@ -40,5 +49,16 @@ func GetClaimsFromContext(c *gin.Context) map[string]interface{} {
 		return nil
 	}
 
-	return claims
+	// Bind claims to session
+	session := Session{}
+	jsonString, err := json.Marshal(claims)
+	if err != nil {
+		return nil
+	}
+	err = json.Unmarshal(jsonString, &session)
+	if err != nil {
+		return nil
+	}
+
+	return &session
 }
