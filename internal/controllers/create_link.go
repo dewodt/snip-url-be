@@ -15,33 +15,8 @@ import (
 
 type CreateLinkSchema struct {
 	Title          string `form:"title" binding:"required"`
-	DestinationUrl string `form:"destination_url" binding:"required,url"`
-	CustomPath     string `form:"custom_path" binding:"required,excludesall=~0x2C<>;:'\"/[]^{}()=+!*@&$?%#0x7C"`
-}
-
-type UpdateLinkSchema struct {
-	Title      string `form:"title" binding:"required"`
-	CustomPath string `form:"custom_path" binding:"required"`
-}
-
-func GetAllLinksHandler(c *gin.Context) {
-	// Get user from context
-	session := utils.GetSessionFromContext(c)
-	if session == nil {
-		c.AbortWithStatusJSON(401, gin.H{"error": "Unauthorized"})
-		return
-	}
-
-	// Get all links
-	links := []models.Link{}
-	dbRes := db.DB.Where("user_id = ?", session.ID).Find(&links)
-	if dbRes.Error != nil {
-		c.AbortWithStatusJSON(500, gin.H{"error": "Failed to get all links"})
-		return
-	}
-
-	// Return links
-	c.JSON(http.StatusOK, gin.H{"links": links})
+	DestinationUrl string `form:"destinationUrl" binding:"required,url"`
+	CustomPath     string `form:"customPath" binding:"required,excludesall=~0x2C<>;:'\"/[]^{}()=+!*@&$?%#0x7C"`
 }
 
 func CreateLinkHandler(c *gin.Context) {

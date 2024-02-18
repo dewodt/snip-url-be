@@ -13,13 +13,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UploadImageSchema struct {
+type UploadAvatarSchema struct {
 	Image *multipart.FileHeader `form:"file" binding:"required"`
 }
 
 func UploadAvatarHandler(c *gin.Context) {
 	// Get file blob from formdata
-	var formData UploadImageSchema
+	var formData UploadAvatarSchema
 	bindErr := c.ShouldBind(&formData)
 	if bindErr != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid form data"})

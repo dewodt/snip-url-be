@@ -12,14 +12,14 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type UserSettingsSchema struct {
+type UpdateUserSchema struct {
 	Name   string  `form:"name" binding:"required"`
 	Avatar *string `form:"avatar"`
 }
 
 func UpdateUserHandler(c *gin.Context) {
 	// Validate & bind form data
-	formData := UserSettingsSchema{}
+	formData := UpdateUserSchema{}
 	err := c.ShouldBind(&formData)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid form data"})
