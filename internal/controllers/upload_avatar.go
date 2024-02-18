@@ -6,7 +6,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
-	"snip-url-be/internal/utils"
+	"snip-url-be/internal/auth"
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
@@ -69,11 +69,7 @@ func UploadAvatarHandler(c *gin.Context) {
 	b64Formatted := fmt.Sprintf("data:%s;base64,%s", fileType, b64)
 
 	// Get user id
-	session := utils.GetSessionFromContext(c)
-	if session == nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
+	session := auth.GetSessionFromContext(c)
 
 	// Upload to cloudinary
 	folderName := "snip-url/user/"

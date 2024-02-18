@@ -1,8 +1,6 @@
-package utils
+package auth
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"encoding/json"
 	"os"
 
@@ -16,19 +14,6 @@ type Session struct {
 	Avatar    string `json:"avatar"`
 	Email     string `json:"email"`
 	ExpiresAt int64  `json:"expires_at"`
-}
-
-// Generate a secure token (for email)
-func GenerateSecureToken(length int) (string, error) {
-	b := make([]byte, length)
-	_, err := rand.Read(b)
-
-	// Error handling
-	if err != nil {
-		return "", err
-	}
-
-	return hex.EncodeToString(b), nil
 }
 
 // Get claims from context

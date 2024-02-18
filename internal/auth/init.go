@@ -16,7 +16,7 @@ const (
 	maxAge = 86400 * 7
 )
 
-func NewAuth() {
+func InitAuth() {
 	// Environment
 	isProduction := os.Getenv("ENVIRONMENT") == "production"
 	SESSION_SECRET := os.Getenv("SESSION_SECRET")

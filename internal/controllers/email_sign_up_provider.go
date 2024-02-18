@@ -3,10 +3,10 @@ package controllers
 import (
 	"errors"
 	"net/http"
+	"snip-url-be/internal/auth"
 	"snip-url-be/internal/db"
 	"snip-url-be/internal/emails"
 	"snip-url-be/internal/models"
-	"snip-url-be/internal/utils"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -48,7 +48,7 @@ func EmailSignUpProviderHandler(c *gin.Context) {
 	}
 
 	// Generate token
-	token, tokenErr := utils.GenerateSecureToken(64)
+	token, tokenErr := auth.GenerateSecureToken(64)
 	if tokenErr != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return

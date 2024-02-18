@@ -3,13 +3,12 @@ package controllers
 import (
 	"errors"
 	"net/http"
+	"snip-url-be/internal/auth"
 	"snip-url-be/internal/db"
 	"snip-url-be/internal/models"
 	"snip-url-be/internal/utils"
-	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
@@ -21,7 +20,7 @@ type CreateLinkSchema struct {
 
 func CreateLinkHandler(c *gin.Context) {
 	// Get user from context
-	session := utils.GetSessionFromContext(c)
+	session := auth.GetSessionFromContext(c)
 
 	// Get request body
 	var formData CreateLinkSchema
@@ -32,14 +31,14 @@ func CreateLinkHandler(c *gin.Context) {
 	}
 
 	// Create uuid from session id
-	userId, err := uuid.Parse(session.ID)
+	userId, err := utils.ParseUUID(session.ID)
 	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{"error": "Failed to convert user id"})
 		return
 	}
 
 	// Clean destination url trailing slash
-	destinationUrl := strings.TrimRight(formData.DestinationUrl, "/")
+	destinationUrl := utils.CleanURL(formData.DestinationUrl)
 
 	// Custom path
 	customPath := models.CustomPath{

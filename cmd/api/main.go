@@ -17,10 +17,10 @@ func main() {
 	}
 
 	// Initialize Auth
-	auth.NewAuth()
+	auth.InitAuth()
 
 	// Initialize Database
-	db.NewDB()
+	db.InitDB()
 
 	// Initialize Server
 	server := server.NewServer()

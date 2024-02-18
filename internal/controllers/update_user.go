@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 	"os"
+	"snip-url-be/internal/auth"
 	"snip-url-be/internal/db"
 	"snip-url-be/internal/models"
-	"snip-url-be/internal/utils"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +27,7 @@ func UpdateUserHandler(c *gin.Context) {
 	}
 
 	// Get user from context
-	session := utils.GetSessionFromContext(c)
+	session := auth.GetSessionFromContext(c)
 
 	// Update user settings
 	dbRes := db.DB.Model(&models.User{}).Select("name", "avatar").Where("id = ?", session.ID).Updates(models.User{
