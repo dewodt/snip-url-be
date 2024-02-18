@@ -45,13 +45,29 @@ func (s *Server) RegisterRoutes() http.Handler {
 			auth.GET("/sign-out", controllers.SignOutHandler)
 		}
 
-		// Settings
-		api.PUT("/user", middlewares.RequireAuthMiddleware(), controllers.UpdateUserHandler)
+		// Protected routes
+		protected := api.Group("")
+		protected.Use(middlewares.RequireAuthMiddleware())
+		{
+			// Settings
+			protected.PUT("/user", controllers.UpdateUserHandler)
 
-		// Upload file
-		api.POST("/upload-avatar", middlewares.RequireAuthMiddleware(), controllers.UploadAvatarHandler)
+			// Upload file
+			protected.POST("/upload-avatar", controllers.UploadAvatarHandler)
 
-		// Snip
+			// Get user's urls preview data
+			protected.GET("/link")
+
+			// Create new url
+			protected.POST("/link", controllers.CreateLinkHandler)
+
+			// Update url
+			protected.PUT("/link/:id")
+
+			// Get url detail
+			protected.GET("/link/:id")
+		}
+
 	}
 
 	return r
