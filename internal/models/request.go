@@ -6,10 +6,12 @@ import (
 	"github.com/google/uuid"
 )
 
-type Session struct {
+type Request struct {
 	ID        uuid.UUID `gorm:"type:uuid;default:gen_random_uuid()"`
-	Token     string
+	Country   string
+	Referrer  string
+	Device    string
 	CreatedAt time.Time
-	ExpiresAt time.Time
-	UserID    uuid.UUID
+	UpdatedAt time.Time
+	LinkID    uuid.UUID
 }

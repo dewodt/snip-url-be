@@ -13,4 +13,6 @@ type User struct {
 	Avatar    *string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	Sessions  []Session
+	Links     []Link
 }

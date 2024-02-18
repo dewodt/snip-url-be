@@ -38,7 +38,7 @@ func NewDB() {
 	psqlDB.SetConnMaxLifetime(time.Hour)
 
 	// Migrate the schema
-	err = db.AutoMigrate(&models.User{}, &models.Verification{}, &models.Session{})
+	err = db.AutoMigrate(&models.User{}, &models.Verification{}, &models.Session{}, &models.Link{}, &models.CustomPath{}, &models.Request{})
 	if err != nil {
 		panic("failed to migrate schema")
 	}

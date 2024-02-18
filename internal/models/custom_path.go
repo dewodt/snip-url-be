@@ -6,10 +6,10 @@ import (
 	"github.com/google/uuid"
 )
 
-type Session struct {
+type CustomPath struct {
 	ID        uuid.UUID `gorm:"type:uuid;default:gen_random_uuid()"`
-	Token     string
+	Path      string    `gorm:"unique;not null"`
 	CreatedAt time.Time
-	ExpiresAt time.Time
-	UserID    uuid.UUID
+	UpdatedAt time.Time
+	LinkID    uuid.UUID
 }
