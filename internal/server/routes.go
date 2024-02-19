@@ -56,19 +56,21 @@ func (s *Server) RegisterRoutes() http.Handler {
 			protected.POST("/upload-avatar", controllers.UploadAvatarHandler)
 
 			// Get user's urls preview data
-			protected.GET("/link")
+			protected.GET("/link", controllers.GetAllLinksHandler)
 
 			// Create new url
 			protected.POST("/link", controllers.CreateLinkHandler)
 
+			// Get url detail
+			protected.GET("/link/:id", controllers.GetLinkDetailHandler)
+
 			// Update url
 			protected.PUT("/link/:id")
-
-			// Get url detail
-			protected.GET("/link/:id")
 		}
-
 	}
+
+	// Redirect urls
+	
 
 	return r
 }
