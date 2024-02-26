@@ -23,17 +23,25 @@ func InitDB() {
 
 	// Connect to database
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT, DB_SSLMODE)
-	db, err := gorm.Open(postgres.Open((dsn)), &gorm.Config{})
+	db, err := gorm.Open(
+		postgres.New(postgres.Config{
+			DSN:                  dsn,
+			PreferSimpleProtocol: true,
+			// Disables implicit prepared statement (PostgreSQL connection pool already uses prepared statement)
+		}), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
+
+	// Global variable
+	DB = db
 
 	// Pooling
 	psqlDB, err := db.DB()
 	if err != nil {
 		panic("failed to connect database")
 	}
-	psqlDB.SetConnMaxIdleTime(10)
+	psqlDB.SetConnMaxIdleTime(100)
 	psqlDB.SetMaxOpenConns(100)
 	psqlDB.SetConnMaxLifetime(time.Hour)
 
@@ -43,6 +51,6 @@ func InitDB() {
 		panic("failed to migrate schema")
 	}
 
-	// Global variable
-	DB = db
+	// Seed DB
+	// SeedDB()
 }

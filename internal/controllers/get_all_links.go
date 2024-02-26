@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 	"snip-url-be/internal/auth"
 	"snip-url-be/internal/db"
@@ -12,19 +11,13 @@ import (
 	"github.com/google/uuid"
 )
 
-type CustomPathResponse struct {
-	ID        uuid.UUID `json:"id"`
-	Path      string    `json:"path"`
-	CreatedAt time.Time `json:"createdAt"`
-}
-
-type LinkResponse struct {
-	ID             uuid.UUID            `json:"id"`
-	Title          string               `json:"title"`
-	DestinationUrl string               `json:"destinationUrl"`
-	CreatedAt      time.Time            `json:"createdAt"`
-	RequestCount   int64                `json:"requestCount"`
-	CustomPaths    []CustomPathResponse `json:"customPaths"`
+type AllLinksResponse struct {
+	ID             uuid.UUID    `json:"id"`
+	Title          string       `json:"title"`
+	DestinationUrl string       `json:"destinationUrl"`
+	CreatedAt      time.Time    `json:"createdAt"`
+	CustomPaths    []CustomPath `json:"customPaths"`
+	TotalRequests  int64        `json:"totalRequests"`
 }
 
 func GetAllLinksHandler(c *gin.Context) {
@@ -40,12 +33,12 @@ func GetAllLinksHandler(c *gin.Context) {
 	}
 
 	// Parse data to response
-	var res []LinkResponse
+	var res []AllLinksResponse
 	for _, link := range data {
 		// Parse custom paths
-		var customPaths []CustomPathResponse
+		var customPaths []CustomPath
 		for _, customPath := range link.CustomPaths {
-			customPaths = append(customPaths, CustomPathResponse{
+			customPaths = append(customPaths, CustomPath{
 				ID:        customPath.ID,
 				Path:      customPath.Path,
 				CreatedAt: customPath.CreatedAt,
@@ -53,26 +46,17 @@ func GetAllLinksHandler(c *gin.Context) {
 		}
 
 		// Append to response
-		link := LinkResponse{
+		link := AllLinksResponse{
 			ID:             link.ID,
 			Title:          link.Title,
 			DestinationUrl: link.DestinationUrl,
 			CreatedAt:      link.CreatedAt,
-			RequestCount:   int64(len(link.Requests)),
+			TotalRequests:  int64(len(link.Requests)),
 			CustomPaths:    customPaths,
 		}
 		res = append(res, link)
 	}
 
-	// Convert to api response camelCase
-	byte, err := json.Marshal(res)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error parsing data"})
-		return
-	}
-	var apiResponse []LinkResponse
-	json.Unmarshal(byte, &apiResponse)
-
 	// Return links
-	c.JSON(http.StatusOK, apiResponse)
+	c.JSON(http.StatusOK, res)
 }
