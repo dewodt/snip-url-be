@@ -90,57 +90,72 @@ func GetLinkDetailHandler(c *gin.Context) {
 		totalLastWeeks += week.Count
 	}
 
-	// Referrers
+	// Referrers Map
 	referrersMap := make(map[string]int64)
 	for _, req := range link.Requests {
 		referrersMap[req.Referrer]++
 	}
+	// Referrers
 	var referrers []Referrer
-	countNotOther := int64(0)
+	countNotOtherReferrer := int64(0)
 	for k, v := range referrersMap {
 		referrers = append(referrers, Referrer{Referrer: k, Count: v})
-		countNotOther += v
+		countNotOtherReferrer += v
 	}
 	sort.Slice(referrers, func(i, j int) bool {
 		return referrers[i].Count > referrers[j].Count
 	})
 	referrers = referrers[:min(len(referrers), 5)]
-	referrers = append(referrers, Referrer{Referrer: "Other", Count: total - countNotOther})
-
-	// Devices
-	var devices []Device
-	devices = append(devices, Device{Device: "Desktop", Count: 0})
-	devices = append(devices, Device{Device: "Mobile", Count: 0})
-	devices = append(devices, Device{Device: "Tablet", Count: 0})
-	devices = append(devices, Device{Device: "Other", Count: 0})
-	for _, req := range link.Requests {
-		if req.Device == "Desktop" {
-			devices[0].Count++
-		} else if req.Device == "Mobile" {
-			devices[1].Count++
-		} else if req.Device == "Tablet" {
-			devices[2].Count++
-		} else {
-			devices[3].Count++
-		}
+	// Other referrers
+	if (total - countNotOtherReferrer) > 0 {
+		referrers = append(referrers, Referrer{Referrer: "Other", Count: total - countNotOtherReferrer})
 	}
 
-	// Location
+	// Devices Map
+	var devicesMap = make(map[string]int64)
+	for _, req := range link.Requests {
+		devicesMap[req.Device]++
+	}
+	// Devices
+	var devices []Device
+	if devicesMap["Desktop"] > 0 {
+		devices = append(devices, Device{Device: "Desktop", Count: devicesMap["Desktop"]})
+	}
+	if devicesMap["Mobile"] > 0 {
+		devices = append(devices, Device{Device: "Mobile", Count: devicesMap["Mobile"]})
+	}
+	if devicesMap["Tablet"] > 0 {
+		devices = append(devices, Device{Device: "Tablet", Count: devicesMap["Tablet"]})
+	}
+	if devicesMap["Other"] > 0 {
+		devices = append(devices, Device{Device: "Other", Count: devicesMap["Other"]})
+	}
+	sort.Slice(devices, func(i, j int) bool {
+		return devices[i].Count > devices[j].Count
+	})
+
+	// Count countries
 	countryMap := make(map[string]int64)
 	for _, req := range link.Requests {
 		countryMap[req.Country]++
 	}
+	// Countries
 	var countries []Country
 	countNotOtherCountry := int64(0)
 	for k, v := range countryMap {
-		countries = append(countries, Country{Country: k, Count: v, Percentage: float64(v) / float64(total) * 100})
+		percentage := float64(v) / float64(total) * 100
+		countries = append(countries, Country{Country: k, Count: v, Percentage: percentage})
 		countNotOtherCountry += v
 	}
 	sort.Slice(countries, func(i, j int) bool {
 		return countries[i].Count > countries[j].Count
 	})
 	countries = countries[:min(len(countries), 5)]
-	countries = append(countries, Country{Country: "Other", Count: total - countNotOtherCountry, Percentage: float64(total-countNotOtherCountry) / float64(total) * 100})
+	// Other countries
+	if (total - countNotOtherCountry) > 0 {
+		otherPercentage := float64(total-countNotOtherCountry) / float64(total) * 100
+		countries = append(countries, Country{Country: "Other", Count: total - countNotOtherCountry, Percentage: otherPercentage})
+	}
 
 	// Custom paths
 	var customPaths = make([]CustomPath, len(link.CustomPaths))
