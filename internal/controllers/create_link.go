@@ -31,7 +31,7 @@ func CreateLinkHandler(c *gin.Context) {
 	}
 
 	// Create uuid from session id
-	userId, err := utils.ParseUUID(session.ID)
+	userId, err := utils.StringToUUID(session.ID)
 	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{"error": "Failed to convert user id"})
 		return

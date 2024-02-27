@@ -26,7 +26,7 @@ func GetAllLinksHandler(c *gin.Context) {
 
 	// Get all links & requests data
 	var data []models.Link
-	err := db.DB.Preload("CustomPaths").Preload("Requests").Where("user_id = ?", session.ID).Find(&data).Error
+	err := db.DB.Preload("CustomPaths").Preload("Requests").Where("user_id = ?", session.ID).Order("created_at DESC").Find(&data).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching data"})
 		return

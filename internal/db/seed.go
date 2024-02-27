@@ -23,7 +23,7 @@ func SeedDB() {
 	// }
 
 	// User
-	uuidUser, err := utils.ParseUUID("3a2068df-82de-4a96-a520-fbd409d96bd1")
+	uuidUser, err := utils.StringToUUID("3a2068df-82de-4a96-a520-fbd409d96bd1")
 	if err != nil {
 		panic(err)
 	}
@@ -36,11 +36,11 @@ func SeedDB() {
 	}
 
 	// Link
-	uuidLink1, err := utils.ParseUUID("548e484d-7a53-496d-8c54-e66b76549244")
+	uuidLink1, err := utils.StringToUUID("548e484d-7a53-496d-8c54-e66b76549244")
 	if err != nil {
 		panic(err)
 	}
-	uuidLink2, err := utils.ParseUUID("17edc4a1-05af-4f66-ae10-b8d928955c0c")
+	uuidLink2, err := utils.StringToUUID("17edc4a1-05af-4f66-ae10-b8d928955c0c")
 	if err != nil {
 		panic(err)
 	}
