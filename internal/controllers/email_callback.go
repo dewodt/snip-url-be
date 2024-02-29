@@ -17,11 +17,12 @@ import (
 // /auth/email/callback/:token
 func EmailCallbackHandler(c *gin.Context) {
 	// Get token from URL
-	token := c.Param("token")
+	token := c.Query("token")
+	email := c.Query("email")
 
 	// Validate token
 	var verification models.Verification
-	dbRes := db.DB.Where("token = ? AND expires_at > ?", token, time.Now()).First(&verification)
+	dbRes := db.DB.Where("token = ? AND email = ? AND expires_at > ?", token, email, time.Now()).First(&verification)
 	// Invalid token
 	if errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid or expired token"})

@@ -32,7 +32,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 			// Email provider
 			auth.POST("/email/sign-in", controllers.EmailSignInProviderHandler)
 			auth.POST("/email/sign-up", controllers.EmailSignUpProviderHandler)
-			auth.GET("/email/callback/:token", controllers.EmailCallbackHandler)
+			auth.GET("/email/callback", controllers.EmailCallbackHandler)
 
 			// OAuth provider
 			auth.GET("/:provider", controllers.OAuthProviderHandler)

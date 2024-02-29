@@ -54,7 +54,7 @@ func EmailSignUpProviderHandler(c *gin.Context) {
 		return
 	}
 
-	// Save token in DB
+	// Save email & token in DB
 	verification := models.Verification{
 		Email: emailData,
 		Name:  &nameData,
