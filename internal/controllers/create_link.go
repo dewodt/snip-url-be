@@ -9,13 +9,18 @@ import (
 	"snip-url-be/internal/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-type CreateLinkSchema struct {
+type CreateLinkRequest struct {
 	Title          string `form:"title" binding:"required"`
 	DestinationUrl string `form:"destinationUrl" binding:"required,url"`
 	CustomPath     string `form:"customPath" binding:"required,excludesall=~0x2C<>;:'\"/[]^{}()=+!*@&$?%#0x7C"`
+}
+
+type CreateLinkResponseData struct {
+	ID uuid.UUID `json:"id"`
 }
 
 func CreateLinkHandler(c *gin.Context) {
@@ -23,7 +28,7 @@ func CreateLinkHandler(c *gin.Context) {
 	session := auth.GetSessionFromContext(c)
 
 	// Get request body
-	var formData CreateLinkSchema
+	var formData CreateLinkRequest
 	err := c.ShouldBind(&formData)
 	if err != nil {
 		c.AbortWithStatusJSON(400, gin.H{"error": err.Error()})
@@ -46,6 +51,7 @@ func CreateLinkHandler(c *gin.Context) {
 	}
 	// Link
 	link := models.Link{
+		ID:             uuid.New(),
 		Title:          formData.Title,
 		DestinationUrl: destinationUrl,
 		UserID:         userId,
@@ -75,6 +81,11 @@ func CreateLinkHandler(c *gin.Context) {
 		}
 	}
 
+	// Data send back to client
+	responseData := CreateLinkResponseData{
+		ID: link.ID,
+	}
+
 	// Return link
-	c.JSON(http.StatusCreated, gin.H{"link": link})
+	c.JSON(http.StatusCreated, gin.H{"message": "Success creating link", "data": responseData})
 }

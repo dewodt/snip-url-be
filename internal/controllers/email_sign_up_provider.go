@@ -37,7 +37,7 @@ func EmailSignUpProviderHandler(c *gin.Context) {
 	dbRes := db.DB.Where("email = ?", emailData).First(&user)
 	// User is already registered
 	if dbRes.RowsAffected > 0 {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "User already registered"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "User already registered", "field": "email"})
 		return
 	}
 

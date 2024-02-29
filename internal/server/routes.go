@@ -65,12 +65,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 			protected.GET("/link/:id", controllers.GetLinkDetailHandler)
 
 			// Update url
-			protected.PUT("/link/:id")
+			protected.PUT("/link/:id", controllers.UpdateLinkHandler)
 		}
 	}
-
-	// Redirect urls
-	
-
 	return r
 }

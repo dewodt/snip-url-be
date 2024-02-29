@@ -34,7 +34,7 @@ func EmailSignInProviderHandler(c *gin.Context) {
 	dbRes := db.DB.Where("email = ?", emailData).First(&user)
 	// User is not registered
 	if errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "User not registered"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "User not registered", "field": "email"})
 		return
 	}
 	// Check for other errors

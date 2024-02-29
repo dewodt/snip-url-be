@@ -86,5 +86,5 @@ func UploadAvatarHandler(c *gin.Context) {
 	}
 
 	// Return secure URL
-	c.JSON(http.StatusOK, gin.H{"url": res.SecureURL})
+	c.JSON(http.StatusOK, gin.H{"message": "Sucess upload image", "data": res.SecureURL})
 }
