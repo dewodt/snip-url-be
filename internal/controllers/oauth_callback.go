@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"snip-url-be/internal/db"
+	"snip-url-be/internal/emails"
 	"snip-url-be/internal/models"
 	"time"
 
@@ -48,6 +49,13 @@ func OAuthCallbackHandler(c *gin.Context) {
 		// Check for errors
 		if dbRes.Error != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+			return
+		}
+
+		// Send welcome email
+		_, err := emails.SendWelcomeEmail(userDB.Email)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to send welcome email"})
 			return
 		}
 	}
