@@ -35,7 +35,7 @@ func UpdateLinkHandler(c *gin.Context) {
 
 	// Get link data
 	var link models.Link
-	err = db.DB.Where("id = ?", linkID).Preload("CustomPaths").First(&link).Error
+	err = db.DB.Where("id = ? AND user_id", linkID, session.ID).Preload("CustomPaths").First(&link).Error
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Invalid link ID, link not found"})
 		return

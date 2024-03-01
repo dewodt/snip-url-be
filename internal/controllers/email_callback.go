@@ -21,6 +21,12 @@ func EmailCallbackHandler(c *gin.Context) {
 	token := c.Query("token")
 	email := c.Query("email")
 
+	// Check if token and email is valid string
+	if token == "" || email == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid token or email"})
+		return
+	}
+
 	// Validate token
 	var verification models.Verification
 	dbRes := db.DB.Where("token = ? AND email = ? AND expires_at > ?", token, email, time.Now()).First(&verification)

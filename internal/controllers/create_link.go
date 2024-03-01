@@ -16,7 +16,7 @@ import (
 type CreateLinkRequest struct {
 	Title          string `form:"title" binding:"required"`
 	DestinationUrl string `form:"destinationUrl" binding:"required,url"`
-	CustomPath     string `form:"customPath" binding:"required,excludesall=~0x2C<>;:'\"/[]^{}()=+!*@&$?%#0x7C"`
+	CustomPath     string `form:"customPath" binding:"required,excludesall=~0x2C<> 	;:'\"/[]^{}()=+!*@&$?%#0x7C"`
 }
 
 type CreateLinkResponseData struct {
