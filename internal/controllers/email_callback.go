@@ -29,42 +29,42 @@ func EmailCallbackHandler(c *gin.Context) {
 
 	// Validate token
 	var verification models.Verification
-	dbRes := db.DB.Where("token = ? AND email = ? AND expires_at > ?", token, email, time.Now()).First(&verification)
+	err := db.DB.Where("token = ? AND email = ? AND expires_at > ?", token, email, time.Now()).First(&verification).Error
 	// Invalid token
-	if errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid or expired token"})
 		return
 	}
 	// Check for other errors
-	if dbRes.Error != nil {
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to validate token"})
 		return
 	}
 
 	// Check if user is already registered
 	var user models.User
-	dbRes = db.DB.Where("email = ?", verification.Email).First(&user)
+	err = db.DB.Where("email = ?", verification.Email).First(&user).Error
 	// Check query errors
-	if dbRes.Error != nil && !errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to find user"})
 		return
 	}
 	// Check if user is not found
-	if dbRes.Error != nil && errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		// Create user
 		user = models.User{
 			Email: verification.Email,
 			Name:  *verification.Name,
 		}
-		dbRes = db.DB.Create(&user)
+		err = db.DB.Create(&user).Error
 		// Check for errors
-		if dbRes.Error != nil {
+		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 			return
 		}
 
 		// Send welcome email
-		_, err := emails.SendWelcomeEmail(user.Email)
+		_, err = emails.SendWelcomeEmail(user.Email)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to send welcome email"})
 			return

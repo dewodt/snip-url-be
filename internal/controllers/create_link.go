@@ -59,12 +59,12 @@ func CreateLinkHandler(c *gin.Context) {
 	}
 
 	// Create link
-	dbRes := db.DB.Create(&link)
+	err = db.DB.Create(&link).Error
 
-	if dbRes.Error != nil {
+	if err != nil {
 		var psqlErr *pgconn.PgError
 		// Check if error is unique constraint violation
-		if errors.As(dbRes.Error, &psqlErr) && (psqlErr.Code == "23505") {
+		if errors.As(err, &psqlErr) && (psqlErr.Code == "23505") {
 			if psqlErr.ConstraintName == "destination_url_user_id" {
 				// Destination url already exists (in user's links)
 				c.AbortWithStatusJSON(400, gin.H{"error": "You already have a link with this destination url", "field": "destinationUrl"})

@@ -21,8 +21,8 @@ type SignInEmailSchema struct {
 func EmailSignInProviderHandler(c *gin.Context) {
 	// Validate form data
 	var formData SignInEmailSchema
-	bindErr := c.ShouldBind(&formData)
-	if bindErr != nil {
+	err := c.ShouldBind(&formData)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid form data"})
 		return
 	}
@@ -31,14 +31,14 @@ func EmailSignInProviderHandler(c *gin.Context) {
 
 	// Check if user is already registered
 	var user models.User
-	dbRes := db.DB.Where("email = ?", emailData).First(&user)
+	err = db.DB.Where("email = ?", emailData).First(&user).Error
 	// User is not registered
-	if errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "User not registered", "field": "email"})
 		return
 	}
 	// Check for other errors
-	if dbRes.Error != nil {
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to validate user"})
 		return
 	}
@@ -55,16 +55,16 @@ func EmailSignInProviderHandler(c *gin.Context) {
 		Email: emailData,
 		Token: token,
 	}
-	dbRes = db.DB.Create(&verification)
+	err = db.DB.Create(&verification).Error
 	// Failed to save token
-	if dbRes.Error != nil {
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to save token"})
 		return
 	}
 
 	// Send email
-	_, emailErr := emails.SendSignInEmail(emailData, token)
-	if emailErr != nil {
+	_, err = emails.SendSignInEmail(emailData, token)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to send email"})
 		return
 	}

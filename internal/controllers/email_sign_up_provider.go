@@ -22,8 +22,8 @@ type SignUpEmailSchema struct {
 func EmailSignUpProviderHandler(c *gin.Context) {
 	// Validate form data
 	var formData SignUpEmailSchema
-	bindErr := c.ShouldBind(&formData)
-	if bindErr != nil {
+	err := c.ShouldBind(&formData)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid form data"})
 		return
 	}
@@ -34,22 +34,21 @@ func EmailSignUpProviderHandler(c *gin.Context) {
 
 	// Check if user is already registered
 	var user models.User
-	dbRes := db.DB.Where("email = ?", emailData).First(&user)
+	err = db.DB.Where("email = ?", emailData).First(&user).Error
 	// User is already registered
-	if dbRes.RowsAffected > 0 {
+	if user.Email == emailData {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "User already registered", "field": "email"})
 		return
 	}
-
 	// Check for other errors
-	if dbRes.Error != nil && !errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to validate user"})
 		return
 	}
 
 	// Generate token
-	token, tokenErr := auth.GenerateSecureToken(64)
-	if tokenErr != nil {
+	token, err := auth.GenerateSecureToken(64)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
 	}
@@ -60,16 +59,16 @@ func EmailSignUpProviderHandler(c *gin.Context) {
 		Name:  &nameData,
 		Token: token,
 	}
-	dbRes = db.DB.Create(&verification)
+	err = db.DB.Create(&verification).Error
 	// Failed to save token
-	if dbRes.Error != nil {
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to save token"})
 		return
 	}
 
 	// Send email
-	_, emailErr := emails.SendSignInEmail(emailData, token)
-	if emailErr != nil {
+	_, err = emails.SendSignInEmail(emailData, token)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to send email"})
 		return
 	}

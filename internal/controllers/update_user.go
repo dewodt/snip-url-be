@@ -30,13 +30,13 @@ func UpdateUserHandler(c *gin.Context) {
 	session := auth.GetSessionFromContext(c)
 
 	// Update user settings
-	dbRes := db.DB.Model(&models.User{}).Select("name", "avatar").Where("id = ?", session.ID).Updates(models.User{
+	err = db.DB.Model(&models.User{}).Select("name", "avatar").Where("id = ?", session.ID).Updates(models.User{
 		Name:   formData.Name,
 		Avatar: formData.Avatar,
-	})
+	}).Error
 
 	// Check for errors
-	if dbRes.Error != nil {
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user settings"})
 		return
 	}

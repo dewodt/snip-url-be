@@ -31,23 +31,22 @@ func OAuthCallbackHandler(c *gin.Context) {
 
 	// Check if user is already registered
 	var userDB models.User
-	dbRes := db.DB.Where("email = ?", userAuth.Email).First(&userDB)
+	err = db.DB.Where("email = ?", userAuth.Email).First(&userDB).Error
 	// Check for errors
-	if dbRes.Error != nil && !errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
 		return
 	}
-
 	// User is not registered
-	if dbRes != nil && errors.Is(dbRes.Error, gorm.ErrRecordNotFound) {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// Create user
 		userDB = models.User{
 			Email: userAuth.Email,
 			Name:  userAuth.Name,
 		}
-		dbRes = db.DB.Create(&userDB)
+		err = db.DB.Create(&userDB).Error
 		// Check for errors
-		if dbRes.Error != nil {
+		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 			return
 		}
