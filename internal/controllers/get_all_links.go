@@ -37,21 +37,24 @@ func GetAllLinksHandler(c *gin.Context) {
 	// Page Offset
 	offset := (page - 1) * pageSize
 
-	// Get start date
-	// startDate, err := time.Parse("2006-01-02", c.Query("start"))
-	// if err != nil {
-	// 	startDate = time.Time{}
-	// }
-	// endDate, err := time.Parse("2006-01-02", c.Query("end"))
-	// if err != nil {
-	// 	endDate = time.Now()
-	// }
+	// Start time
+	start, err := strconv.Atoi(c.Query("start"))
+	if err != nil {
+		start = 0
+	}
+	startTime := time.UnixMilli(int64(start))
+	startDate := startTime.Format("2006-01-02 15:04:05")
+	// End time
+	end, err := strconv.Atoi(c.Query("end"))
+	if err != nil {
+		end = int(time.Now().AddDate(0, 0, 1).UnixMilli()) // Add 1 day to end date to include the end date
+	}
+	endTime := time.UnixMilli(int64(end)).AddDate(0, 0, 1) // Add 1 day to end date to include the end date
+	endDate := endTime.Format("2006-01-02 15:04:05")
 
-	// fmt.Println(startDate)
-	// fmt.Println(endDate)
 	// Get total links
 	var totalLinks int64
-	err = db.DB.Model(&models.Link{}).Where("user_id = ?", session.ID).Count(&totalLinks).Error
+	err = db.DB.Model(&models.Link{}).Where("user_id = ? AND created_at BETWEEN ? AND ?", session.ID, startDate, endDate).Count(&totalLinks).Error
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Error fetching data"})
 		return
@@ -62,7 +65,7 @@ func GetAllLinksHandler(c *gin.Context) {
 	err = db.DB.
 		Preload("CustomPaths").
 		Preload("Requests").
-		Where("user_id = ?", session.ID).
+		Where("user_id = ? AND created_at BETWEEN ? AND ?", session.ID, startDate, endDate).
 		Order("created_at DESC").
 		Offset(offset).
 		Limit(pageSize).
