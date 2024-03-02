@@ -23,6 +23,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 		MaxAge:           12 * 3600,
 	}))
 
+	// Root url redirect to frontend dashboard
+	r.GET("/", controllers.RootHandler)
+
 	// API routes
 	api := r.Group("/api")
 	{
