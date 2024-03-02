@@ -127,8 +127,8 @@ func GetLinkDetailHandler(c *gin.Context) {
 	if devicesMap["Tablet"] > 0 {
 		devices = append(devices, Device{Device: "Tablet", Count: devicesMap["Tablet"]})
 	}
-	if devicesMap["Other"] > 0 {
-		devices = append(devices, Device{Device: "Other", Count: devicesMap["Other"]})
+	if devicesMap["Unknown"] > 0 {
+		devices = append(devices, Device{Device: "Unknown", Count: devicesMap["Unknown"]})
 	}
 	sort.Slice(devices, func(i, j int) bool {
 		return devices[i].Count > devices[j].Count
