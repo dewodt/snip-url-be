@@ -23,7 +23,7 @@ func EmailCallbackHandler(c *gin.Context) {
 
 	// Check if token and email is valid string
 	if token == "" || email == "" {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid token or email"})
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?invalid token or email")
 		return
 	}
 
@@ -32,12 +32,12 @@ func EmailCallbackHandler(c *gin.Context) {
 	err := db.DB.Where("token = ? AND email = ? AND expires_at > ?", token, email, time.Now()).First(&verification).Error
 	// Invalid token
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid or expired token"})
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?invalid or expired token")
 		return
 	}
 	// Check for other errors
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to validate token"})
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to validate token")
 		return
 	}
 
@@ -46,7 +46,7 @@ func EmailCallbackHandler(c *gin.Context) {
 	err = db.DB.Where("email = ?", verification.Email).First(&user).Error
 	// Check query errors
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to find user"})
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to find user")
 		return
 	}
 	// Check if user is not found
@@ -59,14 +59,14 @@ func EmailCallbackHandler(c *gin.Context) {
 		err = db.DB.Create(&user).Error
 		// Check for errors
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+			c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to create user")
 			return
 		}
 
 		// Send welcome email
 		_, err = emails.SendWelcomeEmail(user.Email)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to send welcome email"})
+			c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to send welcome email")
 			return
 		}
 	}
@@ -83,7 +83,7 @@ func EmailCallbackHandler(c *gin.Context) {
 	})
 	jwtSigned, err := jwtToken.SignedString([]byte(JWT_SECRET))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to sign token"})
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to sign token")
 		return
 	}
 

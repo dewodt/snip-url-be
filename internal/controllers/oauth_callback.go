@@ -25,7 +25,7 @@ func OAuthCallbackHandler(c *gin.Context) {
 
 	// Check for errors
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?"+err.Error())
 		return
 	}
 
@@ -34,7 +34,7 @@ func OAuthCallbackHandler(c *gin.Context) {
 	err = db.DB.Where("email = ?", userAuth.Email).First(&userDB).Error
 	// Check for errors
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to get user")
 		return
 	}
 	// User is not registered
@@ -47,14 +47,14 @@ func OAuthCallbackHandler(c *gin.Context) {
 		err = db.DB.Create(&userDB).Error
 		// Check for errors
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+			c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to create user")
 			return
 		}
 
 		// Send welcome email
 		_, err := emails.SendWelcomeEmail(userDB.Email)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to send welcome email"})
+			c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to send welcome email")
 			return
 		}
 	}
@@ -71,7 +71,7 @@ func OAuthCallbackHandler(c *gin.Context) {
 	})
 	jwtSigned, err := jwtToken.SignedString([]byte(JWT_SECRET))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to sign token"})
+		c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL")+"/auth/error?failed to sign token")
 		return
 	}
 
