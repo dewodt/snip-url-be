@@ -12,6 +12,7 @@ require (
 	github.com/jackc/pgx/v5 v5.5.2
 	github.com/joho/godotenv v1.5.1
 	github.com/markbates/goth v1.78.0
+	github.com/mileusna/useragent v1.3.4
 	github.com/resend/resend-go/v2 v2.5.0
 	gorm.io/driver/postgres v1.5.4
 	gorm.io/gorm v1.25.6

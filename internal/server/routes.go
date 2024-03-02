@@ -68,5 +68,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 			protected.PUT("/link/:id", controllers.UpdateLinkHandler)
 		}
 	}
+
+	// Redirect urls endpoint
+	r.GET("/:customPath", controllers.RedirectHandler)
+
 	return r
 }
