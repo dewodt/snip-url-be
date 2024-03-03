@@ -1,3 +1,4 @@
+// FOR PRODUCTION
 package api
 
 import (
@@ -24,7 +25,6 @@ func init() {
 	app = server.RegisterRoutes()
 }
 
-// FOR PRODUCTION
 func Handler(w http.ResponseWriter, r *http.Request) {
 	// Initialize Entrypoint
 	app.ServeHTTP(w, r)

@@ -1,3 +1,4 @@
+// FOR LOCAL DEVELOPMENT
 package main
 
 import (
@@ -8,7 +9,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// FOR LOCAL DEVELOPMENT
 func main() {
 	// Initialize environment variables
 	godotenv.Load(".env")
