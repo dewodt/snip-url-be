@@ -9,7 +9,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func main() {
+func Main() {
 	// Initialize Env
 	errEnv := godotenv.Load()
 	if errEnv != nil {
