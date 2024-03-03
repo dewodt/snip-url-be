@@ -1,16 +1,15 @@
 package server
 
 import (
-	"net/http"
 	"os"
-	"snip-url-be/internal/controllers"
-	"snip-url-be/internal/middlewares"
+	"snip-url-be/controllers"
+	"snip-url-be/middlewares"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Server) RegisterRoutes() http.Handler {
+func RegisterRoutes() *gin.Engine {
 	r := gin.Default()
 
 	// Cors

@@ -1,8 +1,8 @@
 package db
 
 import (
-	"snip-url-be/internal/models"
-	"snip-url-be/internal/utils"
+	"snip-url-be/models"
+	"snip-url-be/utils"
 	"time"
 )
 

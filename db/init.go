@@ -3,7 +3,6 @@ package db
 import (
 	"fmt"
 	"os"
-	"snip-url-be/internal/models"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -46,10 +45,10 @@ func InitDB() {
 	psqlDB.SetConnMaxLifetime(time.Hour)
 
 	// Migrate the schema
-	err = db.AutoMigrate(&models.User{}, &models.Verification{}, &models.Session{}, &models.Link{}, &models.CustomPath{}, &models.Request{})
-	if err != nil {
-		panic("failed to migrate schema")
-	}
+	// err = db.AutoMigrate(&models.User{}, &models.Verification{}, &models.Session{}, &models.Link{}, &models.CustomPath{}, &models.Request{})
+	// if err != nil {
+	// 	panic("failed to migrate schema")
+	// }
 
 	// Seed DB
 	// SeedDB()

@@ -3,10 +3,10 @@ package controllers
 import (
 	"errors"
 	"net/http"
-	"snip-url-be/internal/auth"
-	"snip-url-be/internal/db"
-	"snip-url-be/internal/models"
-	"snip-url-be/internal/utils"
+	"snip-url-be/auth"
+	"snip-url-be/db"
+	"snip-url-be/models"
+	"snip-url-be/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgconn"

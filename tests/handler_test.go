@@ -4,7 +4,7 @@ package tests
 // 	"github.com/gin-gonic/gin"
 // 	"net/http"
 // 	"net/http/httptest"
-// 	"snip-url-be/internal/server"
+// 	"snip-url-beserver"
 // 	"testing"
 // )
 

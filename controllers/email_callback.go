@@ -4,9 +4,9 @@ import (
 	"errors"
 	"net/http"
 	"os"
-	"snip-url-be/internal/db"
-	"snip-url-be/internal/emails"
-	"snip-url-be/internal/models"
+	"snip-url-be/db"
+	"snip-url-be/emails"
+	"snip-url-be/models"
 	"time"
 
 	"github.com/gin-gonic/gin"

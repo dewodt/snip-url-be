@@ -6,7 +6,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
-	"snip-url-be/internal/auth"
+	"snip-url-be/auth"
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"

@@ -3,9 +3,9 @@ package controllers
 import (
 	"net/http"
 	"os"
-	"snip-url-be/internal/auth"
-	"snip-url-be/internal/db"
-	"snip-url-be/internal/models"
+	"snip-url-be/auth"
+	"snip-url-be/db"
+	"snip-url-be/models"
 	"time"
 
 	"github.com/gin-gonic/gin"

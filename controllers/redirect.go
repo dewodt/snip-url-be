@@ -6,8 +6,8 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"snip-url-be/internal/db"
-	"snip-url-be/internal/models"
+	"snip-url-be/db"
+	"snip-url-be/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mileusna/useragent"
