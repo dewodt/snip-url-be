@@ -44,7 +44,7 @@ func generateSignInHtmlString(email string, token string) string {
 						<img
 						alt="Snip URL Logo"
 						height="100"
-						src="https://snip-url.dewodt.com/logo-square.png"
+						src="https://snip-url.dewodt.com/logo-full.png"
 						style="
 							display: block;
 							outline: none;
