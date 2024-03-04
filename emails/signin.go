@@ -54,7 +54,7 @@ func generateSignInHtmlString(email string, token string) string {
 							margin-right: auto;
 							border-radius: 0.375rem;
 						"
-						width="266"
+						width="222"
 						class="CToWUd a6T"
 						data-bit="iit"
 						tabindex="0"
