@@ -25,16 +25,27 @@ func InitAuth() {
 	googleOAuthClientID := os.Getenv("GOOGLE_OAUTH_CLIENT_ID")
 	googleOAuthClientSecret := os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET")
 	googleOAuthCallbackURL := os.Getenv("BE_URL") + "/api/auth/google/callback"
+	googleOAuthScopes := []string{
+		"https://www.googleapis.com/auth/userinfo.profile",
+		"https://www.googleapis.com/auth/userinfo.email",
+	}
 
 	// Discord
 	discordOAuthClientID := os.Getenv("DISCORD_OAUTH_CLIENT_ID")
 	discordOAuthClientSecret := os.Getenv("DISCORD_OAUTH_CLIENT_SECRET")
 	discordOAuthCallbackURL := os.Getenv("BE_URL") + "/api/auth/discord/callback"
+	discordOAuthScopes := []string{
+		"identify",
+		"email",
+	}
 
 	// Github
 	githubOAuthClientID := os.Getenv("GITHUB_OAUTH_CLIENT_ID")
 	githubOAuthClientSecret := os.Getenv("GITHUB_OAUTH_CLIENT_SECRET")
 	githubOAuthCallbackURL := os.Getenv("BE_URL") + "/api/auth/github/callback"
+	githubOAuthScopes := []string{
+		"user:email",
+	}
 
 	// Configure cookie
 	store := sessions.NewCookieStore([]byte(SESSION_SECRET))
@@ -46,8 +57,8 @@ func InitAuth() {
 	// Goth config
 	gothic.Store = store
 	goth.UseProviders(
-		google.New(googleOAuthClientID, googleOAuthClientSecret, googleOAuthCallbackURL),
-		discord.New(discordOAuthClientID, discordOAuthClientSecret, discordOAuthCallbackURL),
-		github.New(githubOAuthClientID, githubOAuthClientSecret, githubOAuthCallbackURL),
+		google.New(googleOAuthClientID, googleOAuthClientSecret, googleOAuthCallbackURL, googleOAuthScopes...),
+		discord.New(discordOAuthClientID, discordOAuthClientSecret, discordOAuthCallbackURL, discordOAuthScopes...),
+		github.New(githubOAuthClientID, githubOAuthClientSecret, githubOAuthCallbackURL, githubOAuthScopes...),
 	)
 }
