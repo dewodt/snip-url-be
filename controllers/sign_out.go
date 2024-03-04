@@ -16,7 +16,8 @@ func SignOutHandler(c *gin.Context) {
 	}
 
 	// Clear cookie
-	c.SetCookie("auth", "", -1, "/", "", false, true)
+	c.SetSameSite(http.SameSiteNoneMode)
+	c.SetCookie("snip-url-auth", "", -1, "/", "", true, true)
 
 	// Success
 	c.JSON(http.StatusOK, gin.H{"message": "Signed out"})

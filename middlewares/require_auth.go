@@ -11,7 +11,7 @@ import (
 func RequireAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Check if user is authenticated from JWT
-		jwtSigned, err := c.Cookie("auth")
+		jwtSigned, err := c.Cookie("snip-url-auth")
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return

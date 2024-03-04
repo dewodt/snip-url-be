@@ -19,7 +19,7 @@ type Session struct {
 // Get claims from context
 func GetSessionFromContext(c *gin.Context) *Session {
 	// Check if user is authenticated from JWT
-	jwtSigned, err := c.Cookie("auth")
+	jwtSigned, err := c.Cookie("snip-url-auth")
 	if err != nil {
 		return nil
 	}

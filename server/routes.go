@@ -19,7 +19,7 @@ func RegisterRoutes() *gin.Engine {
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		MaxAge:           12 * 3600,
+		MaxAge:           24 * 3600,
 	}))
 
 	// Root url redirect to frontend dashboard

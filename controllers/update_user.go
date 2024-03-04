@@ -57,7 +57,8 @@ func UpdateUserHandler(c *gin.Context) {
 	}
 
 	// Save to cookie
-	c.SetCookie("auth", jwtSigned, 24*3600, "/", os.Getenv("FE_URL"), false, true)
+	c.SetSameSite(http.SameSiteNoneMode)
+	c.SetCookie("snip-url-auth", jwtSigned, 24*3600, "/", os.Getenv("PARENT_DOMAIN"), true, true)
 
 	// Success
 	c.JSON(http.StatusOK, gin.H{"message": "User settings updated"})

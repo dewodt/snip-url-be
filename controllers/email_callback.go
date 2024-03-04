@@ -88,7 +88,8 @@ func EmailCallbackHandler(c *gin.Context) {
 	}
 
 	// Save to cookie
-	c.SetCookie("auth", jwtSigned, 24*3600, "/", os.Getenv("FE_URL"), false, true)
+	c.SetSameSite(http.SameSiteNoneMode)
+	c.SetCookie("snip-url-auth", jwtSigned, 24*3600, "/", os.Getenv("PARENT_DOMAIN"), true, true)
 
 	// Return success
 	c.Redirect(http.StatusTemporaryRedirect, os.Getenv("FE_URL"))
