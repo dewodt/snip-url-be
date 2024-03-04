@@ -1,49 +1,40 @@
-# Project snip-url-be
+<p align="center">
+<img src="https://snip-url.dewodt.com/logo-full.png" alt="Snip URL" width="500">
+</p>
 
-One Paragraph of project description goes here
+# 🔭 Description
 
-## Getting Started
+With Snip URL we help you shortern your URL easily and quickly so it is easier to share and remember.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+# Repository
 
-## MakeFile
+- [Front End](https://github.com/dewodt/snip-url-fe)
+- [Back End](https://github.com/dewodt/snip-url-be)
 
-run all make commands with clean tests
-```bash
-make all build
-```
+# ⚙️ How To Use
 
-build the application
-```bash
-make build
-```
+To access the app, you can go to one of the links:
 
-run the application
-```bash
-make run
-```
+- [https://snip-url.dewodt.com/](https://snip-url.dewodt.com/)
 
-Create DB container
-```bash
-make docker-run
-```
+- [https://snip-url.vercel.app/](https://snip-url.vercel.app/)
 
-Shutdown DB container
-```bash
-make docker-down
-```
+# 🛠️ Frameworks/Tools Used
 
-live reload the application
-```bash
-make watch
-```
+- Go/Gin (Back End)
+- GORM (ORM)
+- NeonDB PostgreSQL (Database)
+- Resend (SMTP Provider)
+- Goth (oAuth)
+- Cloudinary (Image Storage & CDN)
 
-run the test suite
-```bash
-make test
-```
+# ✨ Cool Features
 
-clean up binary from the last build
-```bash
-make clean
-```
+- Great user interface with light/night mode option.
+- Create shortern url easily.
+- Statistics like total engagements, last 7 days engagmenets, referrers, countries, last month of your shortern url, and more.
+- Settings to change your name, display name, and profile picture.
+
+# 📩 Feedback
+
+If you have any feedback, suggestion, inquieries, or anything you want to tell me, please feel free to contact me at [this email](mailto:dewantorotriatmojo@gmail.com).
