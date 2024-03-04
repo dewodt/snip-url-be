@@ -12,6 +12,9 @@ import (
 func RegisterRoutes() *gin.Engine {
 	r := gin.Default()
 
+	r.SetTrustedProxies(nil)
+	r.TrustedPlatform = "X-Forwarded-For"
+
 	// Cors
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{os.Getenv("FE_URL")},
